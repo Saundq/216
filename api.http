@@ -1,0 +1,53 @@
+### Добавление вычисления арифметического выражения.
+POST http://localhost:8181/api/v1/add/evaluation_arithmetic_expressions
+X-Request-ID: 8a7sda98sd7a9s8d7a9s8eeed73459a1;
+Content-type: application/json;
+
+{
+  "expression_string": "(31+41)"
+}
+
+### Получение списка выражений со статусами.
+GET http://localhost:8181/api/v1/arithmetic_expressions
+content-type: application/json
+
+
+### Получение значения выражения по его идентификатору.
+GET http://localhost:8181/api/v1/arithmetic_expression/e976efaa-9252-4d43-a46a-3619b5c1b4ac
+content-type: application/json
+
+
+### Получение списка доступных операций со временем их выполения.
+GET http://localhost:8181/api/v1/arithmetic_operations
+content-type: application/json
+
+
+### Получение задачи для выполения.
+GET http://localhost:8181/api/v1/task
+content-type: application/json
+
+
+### Получение частей задачи для выполения.
+GET http://localhost:8181/api/v1/task/64e97491-4a17-45af-86f7-6a83036f31f3
+content-type: application/json
+
+### Приём результата обработки данных.
+PUT http://localhost:8181/api/v1/result/d61c9ef8-be46-45f9-8e3a-58ec09aca45f
+content-type: application/json
+
+{
+  "result": "6"
+}
+
+
+### Изменение времени выполнения.
+PUT http://localhost:8181/api/v1/arithmetic_operations/fbb50290-7e8d-40b6-8a7d-c59ea48439e4
+content-type: application/json
+
+{
+  "lead_time": 15
+}
+
+### Получение списка вычислительных мощностей.
+GET http://localhost:8181/api/v1/available_calculators
+content-type: application/json

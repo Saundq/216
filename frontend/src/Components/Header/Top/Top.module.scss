@@ -1,0 +1,95 @@
+.top {
+  padding: 24px 0 36px;
+
+  @media (max-width: 768px) {
+    padding: 16px 0;
+  }
+
+  &Container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+
+    @media (max-width: 540px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &Phone {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    text-transform: uppercase;
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+      line-height: 15px;
+    }
+
+    @media (max-width: 540px) {
+      display: none;
+    }
+  }
+
+  &Logo {
+    justify-self: center;
+
+    @media (max-width: 768px) {
+      width: 154px;
+    }
+
+    @media (max-width: 540px) {
+      justify-self: start;
+      width: 124px;
+    }
+  }
+
+  &Navigation {
+    justify-self: end;
+  }
+
+  &NavList {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    @media (max-width: 540px) {
+      gap: 16px;
+    }
+  }
+
+  &Link {
+    position: relative;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: #8a8a8a;
+    }
+  }
+
+  &LinkCount {
+    position: absolute;
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    color: #ffffff;
+    top: 0;
+    right: -6px;
+    background-color: #000000;
+    text-align: center;
+    font-weight: 600;
+    font-size: 9px;
+    line-height: 18px;
+  }
+}
+.like {
+  color:transparent;
+
+  &:hover{
+    color: tomato;
+  }
+  &:active{
+    color: crimson;
+  }
+}

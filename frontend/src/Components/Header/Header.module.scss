@@ -1,0 +1,15 @@
+.header {
+  margin-bottom: 50px;
+
+  @media (max-width: 1024px) {
+    margin-bottom: 38px;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 31px;
+  }
+
+  @media (max-width: 540px) {
+    margin-bottom: 19px;
+  }
+}
