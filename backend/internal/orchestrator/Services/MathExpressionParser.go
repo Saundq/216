@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/gofrs/uuid"
 	"log"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -30,6 +29,8 @@ func Priority(op string) int {
 func IsValidExpression(expression string) bool {
 	countOpenBrackets := 0
 	countClosedBrackets := 0
+	countWhiteSpaces := 0
+	expression = strings.TrimSpace(expression)
 
 	for _, char := range expression {
 		if char == '(' {
@@ -39,10 +40,17 @@ func IsValidExpression(expression string) bool {
 			if countClosedBrackets > countOpenBrackets {
 				return false
 			}
-		} else if !unicode.IsDigit(char) && !IsOperator(string(char)) {
-			// Если символ не является цифрой и не является одним из допустимых операторов, выражение некорректно
+		} else if unicode.IsSpace(char) {
+			countWhiteSpaces++
+		} else if !unicode.IsDigit(char) && !IsOperator(string(char)) && !unicode.IsSpace(char) {
 			return false
 		}
+	}
+	if string(expression[0]) == "+" || string(expression[0]) == "*" || string(expression[0]) == "/" {
+		return false
+	}
+	if countWhiteSpaces == 0 {
+		return false
 	}
 
 	last := expression[len(expression)-1]
@@ -57,38 +65,40 @@ func IsValidExpression(expression string) bool {
 	return true
 }
 
-func ToPostfix(expression string) string {
-	outputQueue := []string{}
-	operatorStack := []string{}
-
-	tokens := regexp.MustCompile(`([\d.]+|[\+\-\*\/\(\)])`).FindAllString(expression, -1)
+func ToPostfix(infix string) string {
+	var result strings.Builder
+	stack := make([]rune, 0)
+	tokens := strings.Fields(infix)
 
 	for _, token := range tokens {
-		if token == "" {
-			continue
+		if len(token) > 1 && token[0] == '-' {
+			num, _ := strconv.Atoi(token)
+			result.WriteString(fmt.Sprintf("%d ", num))
+		} else if IsOperator(string(token[0])) {
+			for len(stack) > 0 && Priority(string(token[0])) <= Priority(string(stack[len(stack)-1])) {
+				result.WriteString(string(stack[len(stack)-1]) + " ")
+				stack = stack[:len(stack)-1]
+			}
+			stack = append(stack, rune(token[0]))
 		} else if token == "(" {
-			operatorStack = append(operatorStack, token)
+			stack = append(stack, '(')
 		} else if token == ")" {
-			for len(operatorStack) > 0 && operatorStack[len(operatorStack)-1] != "(" {
-				outputQueue = append(outputQueue, operatorStack[len(operatorStack)-1])
-				operatorStack = operatorStack[:len(operatorStack)-1]
+			for stack[len(stack)-1] != '(' {
+				result.WriteString(string(stack[len(stack)-1]) + " ")
+				stack = stack[:len(stack)-1]
 			}
-			operatorStack = operatorStack[:len(operatorStack)-1]
-		} else if IsOperator(token) {
-			for len(operatorStack) > 0 && Priority(operatorStack[len(operatorStack)-1]) >= Priority(token) {
-				outputQueue = append(outputQueue, operatorStack[len(operatorStack)-1])
-				operatorStack = operatorStack[:len(operatorStack)-1]
-			}
-			operatorStack = append(operatorStack, token)
+			stack = stack[:len(stack)-1]
 		} else {
-			outputQueue = append(outputQueue, token)
+			result.WriteString(token + " ")
 		}
 	}
-	for len(operatorStack) > 0 {
-		outputQueue = append(outputQueue, operatorStack[len(operatorStack)-1])
-		operatorStack = operatorStack[:len(operatorStack)-1]
+
+	for len(stack) > 0 {
+		result.WriteString(string(stack[len(stack)-1]) + " ")
+		stack = stack[:len(stack)-1]
 	}
-	return strings.Join(outputQueue, " ")
+
+	return strings.TrimSpace(result.String())
 }
 
 func EvaluatePostfix(postfix string) float64 {
@@ -202,7 +212,7 @@ func Mathslice(postfix string) []Task {
 					Full:      false,
 					Operand1:  a.Operand1,
 					Polsk:     fmt.Sprintf("%.2f", a.Operand1) + " " + token,
-					Previous:  &b,
+					Next:      &b,
 					Number:    false,
 				})
 				result1 = result1[:len(result1)-2]
@@ -224,8 +234,8 @@ func Mathslice(postfix string) []Task {
 					Operation: token,
 					Full:      false,
 					Polsk:     fmt.Sprintf("%.2f", a.Operand1) + " " + token,
-					Previous:  &b,
-					Next:      &a,
+					Previous:  &a,
+					Next:      &b,
 					Number:    false,
 				})
 				result1 = result1[:len(result1)-2]
@@ -237,91 +247,4 @@ func Mathslice(postfix string) []Task {
 		log.Println(result)
 	}
 	return result
-}
-func searchUuid(id uuid.UUID, arr []Task) bool {
-	for _, v := range arr {
-		if v.Id == id {
-			return true
-			break
-		}
-	}
-	return false
-}
-
-// ////
-func IsValidArithmeticExpression(expression string) bool {
-	// Удаляем все пробелы из выражения
-	expression = strings.ReplaceAll(expression, " ", "")
-
-	// Проверяем, что выражение не пустое
-	if len(expression) == 0 {
-		return false
-	}
-
-	// Проверяем первый символ выражения
-	firstChar := rune(expression[0])
-	if !unicode.IsDigit(firstChar) && firstChar != '(' {
-		return false
-	}
-
-	// Проверяем последний символ выражения
-	lastChar := rune(expression[len(expression)-1])
-	if !unicode.IsDigit(lastChar) && lastChar != ')' {
-		return false
-	}
-
-	// Проверяем парность скобок
-	var stack []rune
-	for _, ch := range expression {
-		if ch == '(' {
-			stack = append(stack, ch)
-		} else if ch == ')' {
-			if len(stack) == 0 {
-				return false
-			}
-			stack = stack[:len(stack)-1]
-		}
-	}
-
-	if len(stack) > 0 {
-		return false
-	}
-
-	// Проверяем последовательность символов
-	for i := 0; i < len(expression)-1; i++ {
-		currChar := rune(expression[i])
-		nextChar := rune(expression[i+1])
-
-		if unicode.IsDigit(currChar) {
-			if !unicode.IsDigit(nextChar) && nextChar != ')' {
-				return false
-			}
-		} else if currChar == '(' {
-			if !unicode.IsDigit(nextChar) && nextChar != '(' {
-				return false
-			}
-		} else if currChar == ')' {
-			if !isOperator(nextChar) && nextChar != ')' {
-				return false
-			}
-		} else if isOperator(currChar) {
-			if !unicode.IsDigit(nextChar) && nextChar != '(' {
-				return false
-			}
-		} else {
-			return false
-		}
-	}
-
-	return true
-}
-
-func isOperator(ch rune) bool {
-	operators := map[rune]bool{
-		'+': true,
-		'-': true,
-		'*': true,
-		'/': true,
-	}
-	return operators[ch]
 }

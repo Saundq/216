@@ -14,7 +14,7 @@ export const AddExpression = () => {
 
     const handleChange = (event) => {
         const input = event.target.value;
-        const regex = /^[0-9+\-\(\)*/]*$/;
+        const regex = /^[0-9+\-\(\)\s*/]*$/;
 
         if (input === '' || regex.test(input)) {
             setMathExpression(input);
@@ -82,8 +82,11 @@ export const AddExpression = () => {
                 Добавить Выражение
                 <div>
                     <div className="form-group">
+                        <div className="alert alert-warning" role="alert">
+                            Операнды и операторы разделяются пробелом.
+                        </div>
                         <label htmlFor="expression">Выражение для вычисления:</label>
-                        <input type="text" value={mathExpression} onChange={handleChange} className="form-control" id="expression"  placeholder="2+2*1"/>
+                        <input type="text" value={mathExpression} onChange={handleChange} className="form-control" id="expression"  placeholder="2 + 2 * 1"/>
                         {!isValid && <p style={{ color: 'red' }}>Invalid math expression</p>}
                     </div>
                     {responseCode===200 && <div className="alert alert-success" role="alert">

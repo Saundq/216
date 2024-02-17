@@ -4,7 +4,7 @@ X-Request-ID: 8a7sda98sd7a9s8d7a9s8eeed73459a1;
 Content-type: application/json;
 
 {
-  "expression_string": "(31+41)"
+  "expression_string": "31 + 41"
 }
 
 ### Получение списка выражений со статусами.

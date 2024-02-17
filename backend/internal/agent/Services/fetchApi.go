@@ -31,21 +31,6 @@ func fetchTask() (Entities.ArithmeticExpressions, int) {
 	return data, resp.StatusCode
 }
 
-func getResult(id uuid.UUID) float64 {
-	resp, err := http.Get("http://localhost:8181//api/v1/arithmetic_expression/" + id.String())
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	result, _ := strconv.ParseFloat(string(b), 32)
-	// Do something with the Person struct...
-	return result
-}
-
 func fetchParts(id uuid.UUID) (Entities.ArithmeticExpressions, int) {
 	resp, err := http.Get("http://localhost:8181/api/v1/task/" + id.String())
 	if err != nil {
@@ -105,15 +90,19 @@ func PollAPI(interval time.Duration, numberComputing int, prefix string) {
 				}
 
 				if dataPart.Previous != nil && dataPart.Next == nil {
+					log.Println("not nill")
 					calck = fmt.Sprintf("%.2f", Operand1) + " " + fmt.Sprintf("%.2f", dataPart.Operand1) + " " + dataPart.Operation
 					calckString = fmt.Sprintf("%.2f", Operand1) + " " + dataPart.Operation + " " + fmt.Sprintf("%.2f", dataPart.Operand1)
 				} else if dataPart.Previous == nil && dataPart.Next == nil {
+					log.Println("nill nill")
 					calck = fmt.Sprintf("%.2f", dataPart.Operand1) + " " + fmt.Sprintf("%.2f", dataPart.Operand2) + " " + dataPart.Operation
 					calckString = fmt.Sprintf("%.2f", dataPart.Operand1) + " " + dataPart.Operation + " " + fmt.Sprintf("%.2f", dataPart.Operand2)
 				} else if dataPart.Previous != nil && dataPart.Next != nil {
-					calck = fmt.Sprintf("%.2f", Operand2) + " " + fmt.Sprintf("%.2f", Operand1) + " " + dataPart.Operation
-					calckString = fmt.Sprintf("%.2f", Operand2) + " " + dataPart.Operation + " " + fmt.Sprintf("%.2f", Operand1)
+					log.Println("not not")
+					calck = fmt.Sprintf("%.2f", Operand1) + " " + fmt.Sprintf("%.2f", Operand2) + " " + dataPart.Operation
+					calckString = fmt.Sprintf("%.2f", Operand1) + " " + dataPart.Operation + " " + fmt.Sprintf("%.2f", Operand2)
 				} else if dataPart.Previous == nil && dataPart.Next != nil {
+					log.Println("nill not")
 					calck = fmt.Sprintf("%.2f", dataPart.Operand1) + " " + fmt.Sprintf("%.2f", Operand2) + " " + dataPart.Operation
 					calckString = fmt.Sprintf("%.2f", dataPart.Operand1) + " " + dataPart.Operation + " " + fmt.Sprintf("%.2f", Operand2)
 				}
@@ -126,9 +115,11 @@ func PollAPI(interval time.Duration, numberComputing int, prefix string) {
 				//Database.Instance.Save(dataPart)
 				//log.Println(calck)
 				//time.Sleep(5)
-				calckResult := fmt.Sprintf("%f", Services.EvaluatePostfix(calck))
+				calckResult := fmt.Sprintf("%.2f", Services.EvaluatePostfix(calck))
 				//log.Println(calckResult, "Proverka")
-
+				if calckResult == "+Inf" || calckResult == "NaN" || calckResult == "-Inf" {
+					calckResult = "Ошибка"
+				}
 				Database.Instance.Model(&Entities.ArithmeticExpressions{}).Where("id = ?", dataPart.ID).Updates(Entities.ArithmeticExpressions{ExpressionString: calckString, Status: Entities.SUCCESS, FinishedAt: int(time.Now().Unix()), Result: calckResult})
 				Database.Instance.Model(&Entities.ComputingResource{}).Where("name = ?", prefix+" "+strconv.Itoa(numberComputing)).Update("task_str", "")
 				Database.Instance.Model(&Entities.ComputingResource{}).Where("name = ?", prefix+" "+strconv.Itoa(numberComputing)).Update("task", nil)
