@@ -14,6 +14,12 @@ make docker-up
 ```
 docker-compose up -d
 ```
+
+из папки backend
+```
+go mod download
+```
+
 - Клонируем проект к себе
     ```
     git clone https://github.com/Saundq/216.git
