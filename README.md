@@ -7,6 +7,12 @@
 Для упрощения установки и запуска можно воспользоваться [docker и docker-compose](https://docs.docker.com/get-docker/).
 В корне проекта находится docker-compose файл который развернет postgres и node, иначе для запуска их необходимо развернуть самостоятельно и отредактировать .env для корректного подключения.
     
+
+
+- Клонируем проект к себе
+    ```
+    git clone https://github.com/Saundq/216.git
+     ```
 ```
 make docker-up
 ```
@@ -18,12 +24,7 @@ docker-compose up -d
 из папки backend
 ```
 go mod download
-```
-
-- Клонируем проект к себе
-    ```
-    git clone https://github.com/Saundq/216.git
-     ```
+```  
 - Установка frontend
   
     Для установки можно воспользоваться makefile:
