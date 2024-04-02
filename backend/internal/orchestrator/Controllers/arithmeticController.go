@@ -8,10 +8,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/gofrs/uuid"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/gofrs/uuid"
+	"github.com/gorilla/mux"
 )
 
 func checkIfRequestExists(requestId string) bool {
@@ -60,6 +61,10 @@ func AddArithmeticExpressions(w http.ResponseWriter, r *http.Request) {
 	uidM, _ := uuid.NewV4()
 	expression.ID = uidM
 	expression.StrValue = postfix
+	ow, _ := Services.ExtractTokenID(r)
+	//var user Entities.User
+	//Database.Instance.First(&user, ow)
+	expression.Owner = ow
 
 	part := []Entities.ArithmeticExpressions{}
 	order := 0
@@ -84,7 +89,7 @@ func AddArithmeticExpressions(w http.ResponseWriter, r *http.Request) {
 		if v.Next != nil {
 			partExpression.Next = &v.Next.Id
 		}
-
+		partExpression.Owner = ow
 		part = append(part, partExpression)
 		order++
 	}
@@ -99,8 +104,11 @@ func AddArithmeticExpressions(w http.ResponseWriter, r *http.Request) {
 
 func ArithmeticExpressionsList(w http.ResponseWriter, r *http.Request) {
 	var expressions []Entities.ArithmeticExpressions
+
+	log.Println(Services.ExtractTokenID(r))
 	//
-	Database.Instance.Preload("PreviousExpression").Preload("NextExpression").Preload("ExpressionPart").Where("parent is null").Order("added_at desc").Find(&expressions)
+	uid, _ := Services.ExtractTokenID(r)
+	Database.Instance.Preload("PreviousExpression").Preload("NextExpression").Preload("ExpressionPart").Where("parent is null").Where("owner=?", uid).Order("added_at desc").Find(&expressions)
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")

@@ -8,7 +8,20 @@ export const ComputionCapabilities = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('http://localhost:8181/api/v1/available_calculators');
+                // const response = await fetch('http://localhost:8181/api/v1/available_calculators',{
+                //     headers: {
+                //         "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                //         "Content-Type": "application/json",
+                //       },
+                // });
+
+                const response = await fetch('http://localhost:8181/api/v1/available_calculators',{method: 'GET',
+                cache: "no-store",
+                headers: {
+                    "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                    "Content-Type": "application/json",
+                },});
+
                 if (!response.ok) {
                     throw new Error('Network error');
                 }
@@ -20,8 +33,8 @@ export const ComputionCapabilities = () => {
         }
 
         fetchData();
-        const interval = setInterval(fetchData, 1000);
-        return () => clearInterval(interval);
+       // const interval = setInterval(fetchData, 5000);
+       // return () => clearInterval(interval);
     }, []);  // пустой массив зависимостей указывает, что эффект должен выполниться только один раз после монтирования компонента
 
     return (

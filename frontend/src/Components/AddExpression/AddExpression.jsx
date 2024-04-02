@@ -3,6 +3,7 @@ import {Container} from "react-bootstrap";
 import axios from "axios";
 import {useState} from "react";
 import CryptoJS from  "crypto-js"
+import { useSelector } from 'react-redux'
 
 export const AddExpression = () => {
 
@@ -25,6 +26,7 @@ export const AddExpression = () => {
         // Perform validation
         setIsValid(isValidMathExpression(input));
     };
+    //const { token } = useSelector((state) => state.auth.userToken)
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -32,7 +34,8 @@ export const AddExpression = () => {
             // Make the POST request to the API with the math expression
             const response = await axios.post('http://localhost:8181/api/v1/add/evaluation_arithmetic_expressions', { expression_string: mathExpression },{
                 headers: {
-                    'X-Request-ID': CryptoJS.MD5(mathExpression).toString()
+                    'X-Request-ID': CryptoJS.MD5(mathExpression).toString(),
+                    "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
                 }
             });
             console.log(response.data);

@@ -1,16 +1,24 @@
 import style from "./Expressions.module.scss"
 import {Container} from "react-bootstrap";
 import {useEffect, useState} from "react";
+import { useSelector } from 'react-redux'
 
 
 export const Expressions = () => {
 
     const [data, setData] = useState(null);
+    const { token } = useSelector(state => state.auth)
 
     useEffect(() => {
+       
         async function fetchData() {
             try {
-                const response = await fetch('http://localhost:8181/api/v1/arithmetic_expressions');
+                const response = await fetch('http://localhost:8181/api/v1/arithmetic_expressions',{
+                    headers: {
+                        "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                        "Content-Type": "application/json",
+                      },
+                });
                 if (!response.ok) {
                     throw new Error('Network error');
                 }
@@ -24,7 +32,7 @@ export const Expressions = () => {
         fetchData();
         const interval = setInterval(fetchData, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [token]);
 
     return (
         <Container className={style.content}>
@@ -48,7 +56,7 @@ export const Expressions = () => {
                         {data.map((item, index) => {
                             return (
                                 <>
-                            <tr key={index} className={item.result.length>0&& item.parent==null?"table-success":""} >
+                            <tr key={item.id} className={item.result.length>0&& item.parent==null?"table-success":""} >
                                 <td></td>
                                 <td>{item.id}</td>
                                 <td>{item.expression_string}</td>

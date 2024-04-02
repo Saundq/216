@@ -6,37 +6,46 @@ import axios from "axios";
 export const Operations = () => {
     const [data, setData] = useState(null);
     const [editedTime, setEditedTime] = useState("");
+    const [mathExpression, setMathExpression] = useState('');
+    const fetchUrl = (URL) => {
+        fetch(URL,{
+            headers: {
+                "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                "Content-Type": "application/json",
+              },
+        })
+        .then((res)=>{
+            return res.json();
+        })
+        .then((data)=>{
+            setData(data);
+        })
+    }
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch('http://localhost:8181/api/v1/arithmetic_operations');
-                if (!response.ok) {
-                    throw new Error('Network error');
-                }
-                const jsonData = await response.json();
-                setData(jsonData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
+    useEffect(()=>{
+        
+        fetchUrl("http://localhost:8181/api/v1/arithmetic_operations");
+    },[URL])
+    
+    const handleSubmit = (e,id) => {
+        e.preventDefault();
+       console.log(id)
 
-        fetchData();
-    }, []);
-
-
-    const handleEditTime = (id) => {
-        // Отправка изменения времени на сервер
-        axios.put(`http://localhost:8181/api/v1/arithmetic_operations/${id}`, { lead_time: parseInt(editedTime.time) })
+       axios.put(`http://localhost:8181/api/v1/arithmetic_operations/${id}`, { lead_time: parseInt(editedTime.time) },{headers: {
+            'Content-Type':'application/json',
+            "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+        },})
             .then(response => {
-                // Обновление данных после успешной отправки изменений
+             
                 setData(data.map(item => (item.id === id ? { ...item, time: editedTime } : item )));
+                fetchUrl("http://localhost:8181/api/v1/arithmetic_operations");
             })
             .catch(error => {
                 console.error('Ошибка отправки изменений:', error);
             });
-        window.location.reload(false);
-    }
+            setEditedTime("");
+            
+      };
 
     return (
         <Container className={style.content}>
@@ -55,14 +64,17 @@ export const Operations = () => {
                             <tr key={index}>
                                 <td>{item.value}</td>
                                 <td>
+                                <form onSubmit={(e)=>handleSubmit(e,item.id)}>
                                     <input
                                         type="text"
-                                        value={item.id === editedTime.id ? editedTime.lead_time : item.lead_time }
+                                        value={item.id === editedTime.id ?editedTime.time:item.lead_time }
                                         onChange={(e) => setEditedTime({ id: item.id, time: e.target.value })}
                                     />
+
                                     {item.id === editedTime.id && (
-                                        <button onClick={() => handleEditTime(item.id)} className="btn btn-success">Сохранить</button>
+                                        <button  className="btn btn-success mx-3">Сохранить</button>
                                     )}
+                                    </form>
                                 </td></tr>
                         ))}
                         </tbody>

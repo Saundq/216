@@ -3,9 +3,10 @@ package Database
 import (
 	"216/internal/orchestrator/Entities"
 	"errors"
+	"log"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
 var Instance *gorm.DB
@@ -26,6 +27,7 @@ func Migrate() {
 		&Entities.ArithmeticOperation{},
 		&Entities.ArithmeticExpressions{},
 		&Entities.ComputingResource{},
+		&Entities.User{},
 	)
 	log.Println("Database Migration Completed...")
 }

@@ -1,6 +1,7 @@
 ### Добавление вычисления арифметического выражения.
 POST http://localhost:8181/api/v1/add/evaluation_arithmetic_expressions
 X-Request-ID: 8a7sda98sd7a9s8d7a9s8eeed73459a1;
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MTE5Nzg1NjksImlhdCI6MTcxMTk3ODI2OSwibmJmIjoxNzExOTc4MzI5LCJ1c2VyX2lkIjoiMzZlMjA1MWMtN2M2MS00OTg4LWI1YTktYWFiMDI2MjBkOTZhIn0.JM2ej4jfKgww7N6o2tZHu_opG7w1lavRsw9suZ5AhBU
 Content-type: application/json;
 
 {
@@ -9,8 +10,8 @@ Content-type: application/json;
 
 ### Получение списка выражений со статусами.
 GET http://localhost:8181/api/v1/arithmetic_expressions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MTE5Nzg4NzMsImlhdCI6MTcxMTk3ODU3MywibmJmIjoxNzExOTc4NjMzLCJ1c2VyX2lkIjoiZTk4ZWNjZmQtN2U1ZS00NDU5LWEwNTUtMzI0OWRlZWEwNjkyIn0.1O5HpC228H45_1pCq9MFQoWZdUX-H6pOeVFJygO_V4k
 content-type: application/json
-
 
 ### Получение значения выражения по его идентификатору.
 GET http://localhost:8181/api/v1/arithmetic_expression/e976efaa-9252-4d43-a46a-3619b5c1b4ac
@@ -51,3 +52,30 @@ content-type: application/json
 ### Получение списка вычислительных мощностей.
 GET http://localhost:8181/api/v1/available_calculators
 content-type: application/json
+
+###
+//Register
+POST http://localhost:8181/api/v1/register
+content-type: application/json
+
+{
+  "name": "Alex1",
+  "email": "saundq1@gmail.com",
+  "password": "password"
+}
+
+###
+//Login
+POST http://localhost:8181/api/v1/login
+content-type: application/json
+
+{
+  "email": "saundq@gmail.com",
+  "password": "password"
+}
+
+###
+//Profile
+GET http://localhost:8181/api/v1/profile
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJpYXQiOjE3MTIwNDUyMDEsInVzZXJfaWQiOiJlOThlY2NmZC03ZTVlLTQ0NTktYTA1NS0zMjQ5ZGVlYTA2OTIifQ.AzYQyf7cSlaq8Glr-miydIF_rc_E49KZwkz9bHzo2vg
