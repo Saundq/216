@@ -53,9 +53,20 @@ export const Top = () => {
                         <ul className="nav navbar-nav navbar-right">
                         <li>{userInfo ?
                                 (
-                                    <button className='nav-link' onClick={()=>dispatch(userLogout())}>
+                                    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          {userInfo.email}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-light">
+            <li><button className='dropdown-item' onClick={()=>dispatch(userLogout())}>
                                          Logout
-                                    </button>
+                                    </button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
                                 ):(
                                     <NavLink className='nav-link' to='/login'>
                                         Login
@@ -64,7 +75,8 @@ export const Top = () => {
 
                             }
                             </li>
-                           
+                            
+
                             <li>
                             {!userInfo ? (
                                 <NavLink className='nav-link' to='/registration'>Register</NavLink>):""
