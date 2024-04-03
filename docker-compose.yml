@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   api-postgres:
+    hostname: api-postgres
     image: postgres:13.3-alpine
     environment:
       POSTGRES_USER: postgres
@@ -10,6 +11,40 @@ services:
       - symfony-postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  grpc-server:
+      build:
+        context: .
+        dockerfile: ./docker/grpcServer.Dockerfile
+      container_name: grpc-server
+      hostname: grpc-server
+      platform: linux/x86_64
+      command: sh -c "/grpcServer"
+      restart: unless-stopped
+      ports:
+        - "5000:5000"
+      depends_on:
+        - api-postgres
+  orchestrator:
+      build:
+        context: .
+        dockerfile: ./docker/orchestrator.Dockerfile
+      platform: linux/x86_64
+      command: sh -c "/orchestrator"
+      restart: unless-stopped
+      ports:
+        - "8181:8181"
+      depends_on:
+        - api-postgres
+  agent:
+      build:
+        context: .
+        dockerfile: ./docker/agent.Dockerfile
+      platform: linux/x86_64
+      command: sh -c "/agent"
+      restart: unless-stopped
+      depends_on:
+        - api-postgres
+        - orchestrator            
   node:
     image: node:20.11-alpine
     platform: linux/x86_64

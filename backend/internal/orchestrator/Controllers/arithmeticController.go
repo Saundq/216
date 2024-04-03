@@ -98,8 +98,32 @@ func AddArithmeticExpressions(w http.ResponseWriter, r *http.Request) {
 	expression.ExpressionPart = part
 
 	Database.Instance.Create(&expression)
-
 	json.NewEncoder(w).Encode(expression)
+
+	// host := "localhost"
+	// port := "5000"
+
+	// addr := fmt.Sprintf("%s:%s", host, port)
+
+	// conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	// if err != nil {
+	// 	log.Println("could not connect to grpc server: ", err)
+	// 	os.Exit(1)
+	// }
+
+	// defer conn.Close()
+
+	// grpcClient := pb.NewExpressionClient(conn)
+
+	// expressionGRPC, err := grpcClient.Do(context.TODO(), &pb.Request{Messgae: "123321"})
+
+	// if err != nil {
+	// 	log.Println("failed invoked Expression: ", err)
+	// }
+
+	//fmt.Println("Expression: ", expressionGRPC.Message)
+
 }
 
 func ArithmeticExpressionsList(w http.ResponseWriter, r *http.Request) {

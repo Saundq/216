@@ -1,0 +1,15 @@
+syntax = "proto3"; // версия proto файлов
+package expressions; // название пакета
+option go_package = "216/proto";
+
+service Expression {
+    rpc Do(Request) returns (Response) {}
+}
+
+message Request {
+    string messgae = 1;
+}
+
+message Response {
+    string message = 1;
+}
