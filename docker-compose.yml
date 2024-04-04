@@ -44,18 +44,29 @@ services:
       restart: unless-stopped
       depends_on:
         - api-postgres
-        - orchestrator            
-  node:
-    image: node:20.11-alpine
-    platform: linux/x86_64
-    volumes:
-      - ./frontend:/var/www
-    working_dir: /var/www
-    ports:
-      - "5173:5173"
-#    command: >
-#      --npm run dev
-    tty: true
+        - orchestrator 
+  frontend:
+      build:
+        context: .
+        dockerfile: ./docker/frontend.Dockerfile
+      platform: linux/x86_64
+      # command: sh -c "npm run dev"
+      restart: unless-stopped
+      ports:
+        - "5173:5173"
+      depends_on:
+        - orchestrator                  
+#   node:
+#     image: node:20.11-alpine
+#     platform: linux/x86_64
+#     volumes:
+#       - ./frontend:/var/www
+#     working_dir: /var/www
+#     ports:
+#       - "5173:5173"
+# #    command: >
+# #      --npm run dev
+#     tty: true
 
 volumes:
   symfony-postgres:
