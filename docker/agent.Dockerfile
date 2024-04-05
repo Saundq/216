@@ -1,11 +1,19 @@
-FROM golang:alpine
+FROM golang:alpine as builder 
 
-RUN apk add build-base
+WORKDIR /build
 
-WORKDIR /backend
+ADD backend/go.mod .
 
 COPY backend .
 
-RUN go mod download
+RUN go build -o agent cmd/agent/main.go
 
-RUN go build -o /agent cmd/agent/main.go
+FROM alpine
+
+WORKDIR /build
+
+COPY --from=builder /build/agent /build/agent
+
+COPY backend/.env /build/.env
+
+CMD ["./agent"]

@@ -33,9 +33,9 @@ export const ComputionCapabilities = () => {
         }
 
         fetchData();
-       // const interval = setInterval(fetchData, 5000);
-       // return () => clearInterval(interval);
-    }, []);  // пустой массив зависимостей указывает, что эффект должен выполниться только один раз после монтирования компонента
+        const interval = setInterval(fetchData, 5000);
+        return () => clearInterval(interval);
+    }, []);  
 
     return (
         <Container className={style.content}>
