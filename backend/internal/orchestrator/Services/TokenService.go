@@ -1,6 +1,8 @@
 package Services
 
 import (
+	"216/internal/orchestrator/Database"
+	"216/internal/orchestrator/Entities"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -35,6 +37,12 @@ func CreateToken(user_id uuid.UUID) (string, error) {
 func TokenValid(r *http.Request) error {
 	tokenString := ExtractToken(r)
 	//log.Println(tokenString)
+	uid, _ := ExtractTokenID(r)
+	var user Entities.User
+	res := Database.Instance.Where("id =?", uid).First(&user)
+	if res.RowsAffected == 0 {
+		return fmt.Errorf("User not found.")
+	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

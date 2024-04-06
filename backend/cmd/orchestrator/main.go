@@ -17,6 +17,8 @@ func RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/api/v1/login", Middlewares.SetMiddlewareJSON(Controllers.Login)).Methods("POST")
 	router.HandleFunc("/api/v1/register", Middlewares.SetMiddlewareJSON(Controllers.CreateUser)).Methods("POST")
 
+	router.HandleFunc("/api/v1/status/heartbeat", Middlewares.SetMiddlewareJSON(Controllers.HealthCheck)).Methods("GET")
+
 	router.HandleFunc("/api/v1/add/evaluation_arithmetic_expressions", Middlewares.SetMiddlewareAuthentication(Controllers.AddArithmeticExpressions)).Methods("POST")
 	router.HandleFunc("/api/v1/arithmetic_expressions", Middlewares.SetMiddlewareAuthentication(Controllers.ArithmeticExpressionsList)).Methods("GET")
 	router.HandleFunc("/api/v1/arithmetic_expression/{id}", Middlewares.SetMiddlewareAuthentication(Controllers.ArithmeticExpression)).Methods("GET")

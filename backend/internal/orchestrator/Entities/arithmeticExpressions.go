@@ -37,7 +37,7 @@ type ArithmeticExpressions struct {
 	NextExpression     *ArithmeticExpressions  `gorm:"foreignkey:Next;"                 json:"next_expression"`
 	ExpressionPart     []ArithmeticExpressions `gorm:"foreignkey:Parent"`
 	Owner              *uuid.UUID              `gorm:"type:uuid;"`
-	OwnerExpression    User                    `gorm:"foreignkey:ID"`
+	//OwnerExpression    User                    `gorm:"foreignkey:ID"`
 }
 
 func (ae *ArithmeticExpressions) BeforeCreate(tx *gorm.DB) (err error) {

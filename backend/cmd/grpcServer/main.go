@@ -181,8 +181,8 @@ func main() {
 
 	Database.Connect(os.Getenv("DB_CONNECTION_STRING"))
 
-	host := "0.0.0.0"
-	port := "5000"
+	host := os.Getenv("GRPC_LISTEN_HOST") //"0.0.0.0"
+	port := os.Getenv("GRPC_PORT")        //"5000"
 
 	addr := fmt.Sprintf("%s:%s", host, port)
 	lis, err := net.Listen("tcp", addr)

@@ -35,7 +35,7 @@ export const AddExpression = () => {
             const response = await axios.post('http://localhost:8181/api/v1/add/evaluation_arithmetic_expressions', { expression_string: mathExpression },{
                 headers: {
                     'X-Request-ID': CryptoJS.MD5(mathExpression).toString(),
-                    "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`,
                 }
             });
             console.log(response.data);

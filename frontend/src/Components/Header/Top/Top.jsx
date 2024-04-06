@@ -12,12 +12,16 @@ export const Top = () => {
 
 
     const {data,isFetching} = useGetUserDetailsQuery('userDetails',{
-        pollingInterval:900000,
+        pollingInterval:5000,
     })
 
     useEffect(()=>{
 
         if (data) dispatch(setCredentials(data))
+        else {
+            sessionStorage.removeItem('userToken')
+            dispatch(setCredentials(null));
+        }
     },[data,dispatch])
 
 
@@ -53,13 +57,13 @@ export const Top = () => {
                         <ul className="nav navbar-nav navbar-right">
                         <li>{userInfo ?
                                 (
-                                    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div className="collapse navbar-collapse" id="navbarNavDarkDropdown">
+      <ul className="navbar-nav">
+        <li className="nav-item dropdown">
+          <button className="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           {userInfo.email}
           </button>
-          <ul class="dropdown-menu dropdown-menu-light">
+          <ul className="dropdown-menu dropdown-menu-light">
             <li><button className='dropdown-item' onClick={()=>dispatch(userLogout())}>
                                          Logout
                                     </button></li>

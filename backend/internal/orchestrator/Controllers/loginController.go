@@ -47,6 +47,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	Response.JsonResponse(w, http.StatusOK, tr)
 }
 
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+
+	if !Database.Instance.Migrator().HasTable("arithmetic_expressions") ||
+		!Database.Instance.Migrator().HasTable("arithmetic_operations") ||
+		!Database.Instance.Migrator().HasTable("computing_resources") ||
+		!Database.Instance.Migrator().HasTable("users") {
+
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
 func SignIn(email, password string) (string, error) {
 
 	var err error

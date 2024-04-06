@@ -1,9 +1,11 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import { userLogin, registerUser } from "../actions/authActions.js";
 
-const userToken = localStorage.getItem('userToken')
-    ? localStorage.getItem('userToken')
+const userToken = sessionStorage.getItem('userToken')
+    ? sessionStorage.getItem('userToken')
     : null
+
+
 
     // const suc = localStorage.getItem('userToken')
     // ? true
@@ -23,7 +25,7 @@ const authSlice = createSlice({
     initialState,
     reducers:{
         userLogout:(state)=>{
-            localStorage.removeItem('userToken')
+            sessionStorage.removeItem('userToken')
             state.loading=false
             state.userInfo=null
             state.userToken=null

@@ -10,7 +10,7 @@ export const Operations = () => {
     const fetchUrl = (URL) => {
         fetch(URL,{
             headers: {
-                "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`,
                 "Content-Type": "application/json",
               },
         })
@@ -33,7 +33,7 @@ export const Operations = () => {
 
        axios.put(`http://localhost:8181/api/v1/arithmetic_operations/${id}`, { lead_time: parseInt(editedTime.time) },{headers: {
             'Content-Type':'application/json',
-            "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+            "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`,
         },})
             .then(response => {
              

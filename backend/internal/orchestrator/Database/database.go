@@ -24,23 +24,26 @@ func Connect(connectionString string) {
 
 func Migrate() {
 	Instance.AutoMigrate(
-		&Entities.ArithmeticOperation{},
+		&Entities.User{},
 		&Entities.ArithmeticExpressions{},
 		&Entities.ComputingResource{},
-		&Entities.User{},
+		&Entities.ArithmeticOperation{},
 	)
 	log.Println("Database Migration Completed...")
 }
 
 func Seeder() {
 	operations := [4]string{"+", "-", "*", "/"}
+	Instance.Exec("DELETE FROM users")
+	user := Entities.User{Name: "admin", Email: "admin@test.ru", Password: "admin"}
+	Instance.Create(&user)
 	Instance.Exec("DELETE FROM arithmetic_operations")
 	if Instance.Migrator().HasTable(&Entities.ArithmeticOperation{}) {
 		if err := Instance.First(&Entities.ArithmeticOperation{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Println("Seeding...")
 			for _, v := range operations {
-				user := Entities.ArithmeticOperation{Value: v, LeadTime: 10}
-				Instance.Create(&user)
+				ao := Entities.ArithmeticOperation{Value: v, LeadTime: 10}
+				Instance.Create(&ao)
 			}
 			log.Println("Success")
 		}

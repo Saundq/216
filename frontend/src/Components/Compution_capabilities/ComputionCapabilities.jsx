@@ -18,7 +18,7 @@ export const ComputionCapabilities = () => {
                 const response = await fetch('http://localhost:8181/api/v1/available_calculators',{method: 'GET',
                 cache: "no-store",
                 headers: {
-                    "Authorization":`Bearer ${localStorage.getItem('userToken')}`,
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`,
                     "Content-Type": "application/json",
                 },});
 

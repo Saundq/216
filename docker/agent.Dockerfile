@@ -16,4 +16,6 @@ COPY --from=builder /build/agent /build/agent
 
 COPY backend/.env /build/.env
 
+CMD ["sleep 10"]
+
 CMD ["./agent"]

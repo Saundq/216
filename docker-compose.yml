@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: store
-    volumes:
-      - symfony-postgres:/var/lib/postgresql/data
+#    volumes:
+#     - symfony-postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   grpc-server:
@@ -20,7 +20,7 @@ services:
       platform: linux/x86_64
       restart: unless-stopped
       ports:
-        - "5000:5000"
+        - "5001:5000"
       depends_on:
         - api-postgres
   orchestrator:
@@ -33,6 +33,11 @@ services:
         - "8181:8181"
       depends_on:
         - api-postgres
+      healthcheck:
+        test:  wget --no-verbose --tries=1 --spider http://orchestrator:8181/api/v1/status/heartbeat || exit 1
+        interval: 5s
+        timeout: 2s
+        retries: 5
   agent:
       build:
         context: .
@@ -41,8 +46,8 @@ services:
       container_name: agent
       restart: unless-stopped
       depends_on:
-        - api-postgres
-        - orchestrator 
+        orchestrator:
+           condition: service_healthy
   frontend:
       build:
         context: .
@@ -50,8 +55,9 @@ services:
       platform: linux/x86_64
       restart: unless-stopped
       ports:
-        - "5173:5173"
+        - "5175:5173"
       depends_on:
+        - api-postgres
         - orchestrator                  
 
 

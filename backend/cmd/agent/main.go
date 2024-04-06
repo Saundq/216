@@ -156,9 +156,8 @@ func computingResource(i int, prefix string) {
 //	}
 
 func loadF(i string) {
-
-	host := "grpc-server"
-	port := "5000"
+	host := os.Getenv("GRPC_HOST") //"0.0.0.0"
+	port := os.Getenv("GRPC_PORT") //"5000"
 
 	addr := fmt.Sprintf("%s:%s", host, port)
 

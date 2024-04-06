@@ -14,11 +14,12 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"primary_key;type:uuid;"         json:"id"`
-	Name      string    `gorm:"size:255;not null;unique" json:"name"`
-	Email     string    `gorm:"size:100;not null;unique" json:"email"`
-	Password  string    `gorm:"size:100; not null;" json:"password"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	ID                    uuid.UUID               `gorm:"primary_key;type:uuid;"         json:"id"`
+	Name                  string                  `gorm:"size:255;not null;unique" json:"name"`
+	Email                 string                  `gorm:"size:100;not null;unique" json:"email"`
+	Password              string                  `gorm:"size:100; not null;" json:"password"`
+	CreatedAt             time.Time               `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	ArithmeticExpressions []ArithmeticExpressions `gorm:"foreignKey:Owner;references:ID;constraint:OnDelete:CASCADE;"`
 }
 
 func Hash(password string) ([]byte, error) {
