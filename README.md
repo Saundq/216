@@ -17,6 +17,7 @@ docker compose up -d
 ```
 4. 
 ![img.png](23kjh2jk4h.PNG)
+
 После запуска всех контейнеров будет доступен интерфейс
 ```
 http://localhost:5175  
