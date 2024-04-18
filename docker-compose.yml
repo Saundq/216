@@ -7,10 +7,15 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: store
-#    volumes:
-#     - symfony-postgres:/var/lib/postgresql/data
+ #   volumes:
+ #    - symfony-postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
   grpc-server:
       build:
         context: .
@@ -22,29 +27,31 @@ services:
       ports:
         - "5001:5000"
       depends_on:
-        - api-postgres
+        api-postgres:
+          condition: service_healthy
   orchestrator:
       build:
         context: .
         dockerfile: ./docker/orchestrator.Dockerfile
       platform: linux/x86_64
-      restart: unless-stopped
       ports:
         - "8181:8181"
       depends_on:
-        - api-postgres
+        api-postgres:
+          condition: service_healthy
       healthcheck:
-        test:  wget --no-verbose --tries=1 --spider http://orchestrator:8181/api/v1/status/heartbeat || exit 1
-        interval: 5s
-        timeout: 2s
-        retries: 5
+        test:  wget --no-verbose --tries=1 --spider http://localhost:8181/api/v1/status/heartbeat || exit 1
+        interval: 60s
+        timeout: 30s
+        retries: 50
+      
   agent:
       build:
         context: .
         dockerfile: ./docker/agent.Dockerfile
       platform: linux/x86_64
       container_name: agent
-      restart: unless-stopped
+      restart: on-failure
       depends_on:
         orchestrator:
            condition: service_healthy

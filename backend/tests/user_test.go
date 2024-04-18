@@ -38,14 +38,14 @@ func TestBeforeSave(t *testing.T) {
 }
 
 func TestPrepare(t *testing.T) {
-	user := Entities.User{Name: "   John   ", Email: "   john@example.com   "}
+	user := Entities.User{Name: "   Test   ", Email: "   test@test.com   "}
 	user.Prepare()
-	assert.Equal(t, user.Name, "John")
-	assert.Equal(t, user.Email, "john@example.com")
+	assert.Equal(t, user.Name, "Test")
+	assert.Equal(t, user.Email, "test@test.com")
 }
 
 func TestValidateUpdate(t *testing.T) {
-	user := Entities.User{Name: "John", Email: "john@example.com", Password: "secretpassword"}
+	user := Entities.User{Name: "Test", Email: "test@test.com", Password: "secretpassword"}
 	err := user.Validate("update")
 	assert.Nil(t, err)
 
@@ -55,7 +55,7 @@ func TestValidateUpdate(t *testing.T) {
 }
 
 func TestValidateLogin(t *testing.T) {
-	user := Entities.User{Name: "John", Email: "john@example.com", Password: "secretpassword"}
+	user := Entities.User{Name: "Test", Email: "test@test.com", Password: "secretpassword"}
 	err := user.Validate("login")
 	assert.Nil(t, err)
 
@@ -65,7 +65,7 @@ func TestValidateLogin(t *testing.T) {
 }
 
 func TestValidateDefault(t *testing.T) {
-	user := Entities.User{Name: "John", Email: "john@example.com", Password: "secretpassword"}
+	user := Entities.User{Name: "Test", Email: "test@test.com", Password: "secretpassword"}
 	err := user.Validate("default")
 	assert.Nil(t, err)
 

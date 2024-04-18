@@ -3,14 +3,33 @@
 Состоит из Front-end и Back-end частей. Grpc server и agent .
 
 ## Установка и запуск
-1. git clone https://github.com/Saundq/216.git
-2. docker-compose build
-3. docker-compose up -d
-4. http://localhost:5175  
+1. 
+```
+git clone https://github.com/Saundq/216.git
+```
+2. 
+```
+docker-compose build
+```
+3. 
+```
+docker compose up -d
+```
+4. 
+```
+http://localhost:5175  
 	  email: admin@test.ru 
 	  password: admin
-##Запуск тестов 
-из папки backend go test  -v  .\tests\ 
+```
+
+## Запуск тестов
+Тестами покрыт код отвечающий за работу с математическими выражениями и пользователямипше 
+из папки backend 
+
+windows
+go test  -v  .\tests\
+unix
+go test -v tests/* 
 
 ## Принцип работы
 По адресу [http://localhost:5175 доступен frontend](http://localhost:5175/)
