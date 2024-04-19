@@ -21,7 +21,7 @@ docker compose up -d
 После запуска всех контейнеров будет доступен интерфейс
 [http://localhost:5175](http://localhost:5175/)
 
-| <!-- -->  | <!-- -->     |
+| <!-- -->  | <!-- -->      |
 |:----------|:--------------|
 | email:    | admin@test.ru |
 | password: | admin         |
