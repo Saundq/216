@@ -20,10 +20,9 @@ docker compose up -d
 
 После запуска всех контейнеров будет доступен интерфейс
 [http://localhost:5175](http://localhost:5175/)
-```  
-	  email: admin@test.ru 
-	  password: admin
-```
+
+| email: | admin@test.ru |
+| password: | admin |
 
 Весь реализованный ранее функционал работает как раньше, только в контексте конкретного пользователя
 Выражения хранятся в Postgres работа с БД произовдится через ORM Gorm.
