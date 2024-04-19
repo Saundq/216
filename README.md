@@ -19,8 +19,8 @@ docker compose up -d
 ![img.png](23kjh2jk4h.PNG)
 
 После запуска всех контейнеров будет доступен интерфейс
-```
-http://localhost:5175  
+[http://localhost:5175](http://localhost:5175/)
+```  
 	  email: admin@test.ru 
 	  password: admin
 ```
@@ -36,9 +36,13 @@ http://localhost:5175
 из папки backend 
 
 windows
+```
 go test  -v  .\tests\
+```
 unix
+```
 go test -v tests/* 
+```
 
 ## Принцип работы
 По адресу [http://localhost:5175 доступен frontend](http://localhost:5175/)
